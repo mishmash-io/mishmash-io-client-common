@@ -1,0 +1,40 @@
+{
+    "name": "mishmash-io/mishmash-rpc-php",
+    "description": "mishmash.io gRPC client services",
+    "type": "library",
+    "keywords": ["database", "mishmash", "io", "mishmash.io", "grpc", "client"],
+    "homepage": "https://mishmash.io",
+    "readme": "README.md",
+    "license": "Apache-2.0",
+    "support": {
+        "email": "info@mishmash.io",
+        "docs": "https://mishmash.io",
+        "source": "https://github.com/mishmash-io"
+    },
+    "require": {
+        "grpc/grpc": "^v1.27.0",
+        "google/protobuf": "^v3.11.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "": ["mishmash-rpc-php/src", "mishmash-rpc-php/gen-src"]
+        }
+    },
+    "scripts": {
+        "pre-install-cmd": [
+            "protoc --proto_path=protobuf --php_out=mishmash-rpc-php/gen-src --grpc_out=mishmash-rpc-php/gen-src protobuf/mishmash_rpc.proto"
+        ]
+    },
+    "archive": {
+        "exclude": [
+            "/*",
+            ".gitignore",
+            ".npmignore",
+            "!/composer.json",
+            "!/mishmash-rpc-php",
+            "!/LICENSE.txt",
+            "!/README.md",
+            "!/VERSION.txt"
+        ]
+    }
+}

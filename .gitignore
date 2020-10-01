@@ -1,0 +1,16 @@
+.project
+.settings
+.classpath
+target/
+node_modules/
+mishmash-rpc-java/.checkstyle
+
+.eggs
+__pycache__/
+*.egg-info/
+
+vendor/
+composer.lock
+build/
+
+*.gem

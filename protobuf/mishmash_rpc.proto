@@ -1,0 +1,291 @@
+/*
+ * Copyright 2020 MISHMASH I O OOD
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+syntax = "proto3";
+
+package io.mishmash.common.rpc;
+
+service MishmashService {
+    rpc stream(stream StreamClientMessage) returns (stream StreamServerMessage);
+    rpc mutate(stream MutationClientMessage) returns (stream MutationServerMessage);
+}
+
+message StreamClientMessage {
+    uint32 client_seq_no = 1;
+    oneof alt {
+        MishmashSetup setup = 2;
+        YieldDataAck ack = 3;
+        Error error = 4;
+        ClientInvokeResult invoke_result = 5;
+        ConsoleOutputAck output_ack = 6;
+        DebugAck debug_ack = 7;
+    }
+}
+
+message StreamServerMessage {
+    uint32 server_seq_no = 1;
+    oneof alt {
+        SetupAck setup_ack = 2;
+        YieldData yield_data = 3;
+        Error error = 4;
+        ClientInvokeRequest invoke = 5;
+        ConsoleOutput output = 6;
+        Debug debug = 7;
+    }
+}
+
+message MutationClientMessage {
+    uint32 client_seq_no = 1;
+    oneof alt {
+        MishmashSetup setup = 2;
+        YieldData yield_data = 3;
+        Error error = 4;
+    }
+}
+
+message MutationServerMessage {
+    uint32 server_seq_no = 1;
+    oneof alt {
+        SetupAck setup_ack = 2;
+        YieldDataAck ack = 3;
+        Error error = 4;
+    }
+}
+
+message MishmashSetup {
+    MishmashSetDescriptorList target_set = 1;
+    map<string, string> client_options = 3;
+
+    enum MutationType {
+        OVERWRITE = 0;
+        APPEND = 1;
+    }
+    MutationType mutation_type = 4;
+}
+
+message SetupAck {
+    
+}
+
+message YieldData {
+    repeated YieldMember hierarchy = 1;
+    YieldValue value = 2;
+}
+
+message YieldMember {
+    Id instance_id = 1;
+    Member member = 2;
+}
+
+message YieldValue {
+    Id instance_id = 1;
+    Value value = 2;
+}
+
+message YieldDataAck {
+
+}
+
+message ClientInvokeRequest {
+    string callable_id = 1;
+    
+}
+
+message ClientInvokeResult {
+    uint32 ack_seq_no = 1;
+    Value result = 2;
+}
+
+message ConsoleOutput {
+    string console_output_line = 1;
+}
+
+message ConsoleOutputAck {
+    uint32 ack_seq_no = 1;
+}
+
+message Debug {
+    repeated string debug_info = 1;
+}
+
+message DebugAck {
+    uint32 ack_seq_no = 1;
+}
+
+message Error {
+    uint32 in_reply_to_seq_no = 1;
+    sint32 error_code = 2;
+    string message = 3;
+    repeated string additional_info = 4;
+}
+
+message MishmashSetDescriptor {
+    oneof alt {
+        Union union = 1;
+        Intersection intersection = 2;
+        Literal literal = 3;
+        PredefinedSet predefined_set = 4;
+        Transformation transformation = 5;
+        PredefinedFunction predefined_function = 6;
+        LambdaFunction lambda_function = 7;
+    }
+}
+
+message MishmashSetDescriptorList {
+    repeated MishmashSetDescriptor entries = 1;
+}
+
+message Union {
+    MishmashSetDescriptorList sets = 1;
+}
+
+message Intersection {
+    MishmashSetDescriptorList sets = 1;
+}
+
+message Literal {
+    oneof alt {
+        Id id = 2;
+        Value value = 3;
+    }
+}
+
+message Member {
+    oneof alt {
+        string name = 1;
+        uint64 index = 2;
+    }
+}
+
+message Id {
+    string id = 1;
+}
+
+message Value {
+    oneof alt {
+        NullValue null = 1;
+        BooleanValue boolean = 2;
+        DecimalValue decimal = 4;
+        StringValue string = 5;
+        DateValue date = 6;
+        BufferValue buffer = 7;
+    }
+}
+
+message NullValue {
+
+}
+
+message BooleanValue {
+    bool boolean = 1;
+}
+
+message DecimalValue {
+    oneof alt {
+        uint32 u_int_32 = 1;
+        sint32 s_int_32 = 2;
+        uint64 u_int_64 = 3;
+        sint64 s_int_64 = 4;
+        double floating = 5;
+        string string_sequence = 6;
+        BigEndianDecimal big_decimal = 7;
+    }
+}
+
+message BigEndianDecimal {
+    bool sign = 1;
+    bytes integerPart = 2;
+    bytes fractionalPart = 3;
+}
+
+message StringValue {
+    string sequence = 1;
+}
+
+message DateValue {
+    oneof alt {
+        string iso8601 = 1;        
+    }
+}
+
+message BufferValue {
+    bytes buf = 1;
+}
+
+message PredefinedSet {
+    enum identifier {
+        PARENT = 0;
+        CHILD = 1;
+        SIBLINGS = 2;
+        ANCESTORS = 3;
+        DESCENDANTS = 4;
+    }
+
+    identifier ident = 1;
+}
+
+message Transformation {
+    message Axis {
+        MishmashSetDescriptorList left = 1;
+        MishmashSetDescriptorList right = 2;
+    }
+
+    Axis axis = 1;
+}
+
+message PredefinedFunction {
+    string name = 1;
+    repeated MishmashSetDescriptor arguments = 2;
+}
+
+message LambdaFunction {
+    string client_runtime = 1;
+    string name = 2;
+    string scope_id = 3;
+    LambdaFunctionBody body = 4;
+    repeated LambdaFunctionClosure scope = 5;
+    repeated LambdaFunction dependencies = 6;
+}
+
+message LambdaFunctionBody {
+    oneof alt_types {
+        string source = 1;
+    }
+}
+
+message LambdaFunctionClosure {
+    string identifier = 1;
+    oneof alt_types {
+        Value constant = 2;
+        MishmashSetDescriptor mishmash = 3;
+        Collection collection = 4;
+        ClientCallable streaming_iterator = 5;
+        ClientCallable streaming_map = 6;
+        ClientCallable streaming_object = 7;
+    }
+}
+
+message Collection {
+    message Entry {
+        Value key = 1;
+        Value value = 2;
+    }
+
+    Entry entry = 1;
+}
+
+message ClientCallable {
+    string identifier = 1;
+}
