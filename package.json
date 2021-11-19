@@ -1,6 +1,6 @@
 {
     "name": "@mishmash-io/mishmash-rpc",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "mishmash.io gRPC client services",
     "keywords": [
         "mishmash.io",
@@ -16,18 +16,18 @@
     },
     "license": "Apache-2.0",
     "files": [
-        "mishmash-rpc-js/*"
+        "mishmash-rpc-js/**"
     ],
-    "main": "mishmash-rpc-js/gen-src/protobuf/rpc_grpc_pb.js",
+    "main": "mishmash-rpc-js/src/index.js",
     "dependencies": {
-        "@grpc/proto-loader": "^0.5.1",
-        "google-protobuf": "^3.8.0",
-        "grpc": "^1.24.2"
+        "@grpc/proto-loader": "^0.6.6",
+        "google-protobuf": "^3.19.1",
+        "grpc": "^1.24.11"
     },
     "devDependencies": {
-        "grpc-tools": "^1.7.3"
+        "grpc-tools": "^1.11.2"
     },
     "scripts": {
-        "prepare": "grpc_tools_node_protoc --js_out=import_style=commonsjs,binary:mishmash-rpc-js/gen-src/ --grpc_out=mishmash-rpc-js/gen-src/ protobuf/mishmash_rpc.proto"
+        "prepare": "grpc_tools_node_protoc --js_out=import_style=commonjs,binary:mishmash-rpc-js/gen-src/ --grpc_out=mishmash-rpc-js/gen-src/ protobuf/mishmash_rpc.proto"
     }
 }
