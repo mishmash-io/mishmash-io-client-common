@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-__requires__ = "grpclib"
-
-from setuptools.command.build_py import build_py
-from setuptools import setup
 import os
+from setuptools import setup
+from setuptools.command.develop import develop
+from setuptools.command.sdist import sdist
+from setuptools.command.build_py import build_py
+
 
 def readme():
     try:
@@ -30,33 +31,48 @@ See [mishmash io](https://mishmash.io) for documentation.
 """
 
 
-OUTPUT_DESTINATION = os.path.join("mishmash-rpc-python", "gen-src")
+def version():
+    with open('VERSION.txt', 'r') as version:
+        return version.readline().strip()
 
-with open('requirements.txt') as f:
-    INSTALL_REQUIREMENTS = f.read().splitlines()
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 PROTOBUF_FILE_DESTINATION = os.path.join(HERE, "protobuf")
 OUTPUT_DESTINATION = os.path.join("mishmash-rpc-python", "gen-src")
 
+def build_mishmash_grpc_files():
+    import grpc_tools.protoc
+    grpc_tools.protoc.main([
+        'grpc_tools.protoc',
+        '-I{}'.format(PROTOBUF_FILE_DESTINATION),
+        '--python_out={}'.format(OUTPUT_DESTINATION),
+        '--grpc_python_out={}'.format(OUTPUT_DESTINATION),
+        "mishmash_rpc.proto"
+    ])
 
-class CustomBuildCommand(build_py):
+
+class CustomBuildPyCommand(build_py):
     def run(self):
-        import grpc_tools.protoc
-
-        grpc_tools.protoc.main([
-            'grpc_tools.protoc',
-            '-I{}'.format(PROTOBUF_FILE_DESTINATION),
-            '--python_out={}'.format(OUTPUT_DESTINATION),
-            '--grpclib_python_out={}'.format(OUTPUT_DESTINATION),
-            "mishmash_rpc.proto"
-        ])
+        build_mishmash_grpc_files()
         build_py.run(self)
+
+
+class CustomSDistCommand(sdist):
+    def run(self):
+
+        build_mishmash_grpc_files()
+        sdist.run(self)
+
+
+class CustomDevelopCommand(develop):
+    def run(self):
+        build_mishmash_grpc_files()
+        develop.run(self)
 
 
 setup(
     name='mishmash-io-rpc',
-    version='0.0.4',
+    version=version(),
     description='mishmash gRPC client service',
     long_description=readme(),
     long_description_content_type='text/markdown',
@@ -92,17 +108,18 @@ setup(
     python_requires='>=3.6, <4',
 
     package_dir={'': OUTPUT_DESTINATION},
-    py_modules=['mishmash_rpc_pb2', 'mishmash_rpc_grpc'],
+    py_modules=['mishmash_rpc_pb2', 'mishmash_rpc_pb2_grpc'],
 
-    install_requires=INSTALL_REQUIREMENTS,
+    install_requires=['grpcio>=1.41.1',
+                      'protobuf>=3.19.0'],
+
     setup_requires=[
-        'wheel',
-        'grpcio-tools',
-        'grpclib==0.3.2',
-        'protobuf'
+        "grpcio-tools>=1.41.1"
     ],
-    cmdclass={
-        'build_py': CustomBuildCommand,
-    },
 
+    cmdclass={
+        'build_py': CustomBuildPyCommand,
+        'sdist': CustomSDistCommand,
+        'develop': CustomDevelopCommand
+    }
 )
