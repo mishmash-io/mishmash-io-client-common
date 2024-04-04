@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright 2020 MISHMASH I O OOD
+    Copyright 2024 Mishmash IO UK Ltd.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+      http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--->
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -23,132 +22,145 @@
   <packaging>pom</packaging>
 
   <name>mishmash-common</name>
-
+  <description>Common code shared between mishmash io clients and server.</description>
   <url>https://mishmash.io</url>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <organization>
+    <name>mishmash io</name>
+    <url>https://mishmash.io</url>
+  </organization>
+
+  <scm>
+    <connection>scm:git:git://github.com/mishmash-io/mishmash-io-client-common</connection>
+    <developerConnection>scm:git:https://github.com/mishmash-io/mishmash-io-client-common.git</developerConnection>
+    <url>https://github.com/mishmash-io/mishmash-io-client-common</url>
+  </scm>
+
+  <developers>
+    <developer>
+      <name>Ivan Kountchev</name>
+      <email>i.kountchev@mishmash.io</email>
+      <organization>mishmash io</organization>
+      <organizationUrl>https://mishmash.io</organizationUrl>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Andrey Rusev</name>
+      <email>a.rusev@mishmash.io</email>
+      <organization>mishmash io</organization>
+      <organizationUrl>https://mishmash.io</organizationUrl>
+      <roles>
+        <role>architect</role>
+      </roles>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <grpc.version>1.62.2</grpc.version>
+    <protobuf.version>3.25.3</protobuf.version>
   </properties>
   
   <modules>
     <module>mishmash-common-java</module>
     <module>mishmash-rpc-java</module>
   </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-protobuf</artifactId>
+        <version>${grpc.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-stub</artifactId>
+        <version>${grpc.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <release>11</release>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>3.1.0</version>
-        <configuration>
-          <sourceDirectories>
-            <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
-          </sourceDirectories>
-          <encoding>UTF-8</encoding>
-          <consoleOutput>true</consoleOutput>
-          <failsOnError>true</failsOnError>
-          <linkXRef>false</linkXRef>
-        </configuration>
-        <executions>
-          <execution>
-            <id>validate</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>3.2.1</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.2.0</version>
-        <executions>
-          <execution>
-          	<id>attach-javadocs</id>
-          	<goals>
-          	  <goal>jar</goal>
-          	</goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
     <pluginManagement>
-	  <plugins>
-	    <plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-deploy-plugin</artifactId>
-	      <version>3.0.0-M1</version>
-	    </plugin>
-		<plugin>
-		  <groupId>org.apache.felix</groupId>
-		  <artifactId>maven-bundle-plugin</artifactId>
-		  <version>4.2.1</version>
-		  <extensions>true</extensions>
-		  <configuration>
-			<instructions>
-			  <Bundle-Name>${project.artifactId}</Bundle-Name>
-			</instructions>
-		  </configuration>
-		</plugin>
-		<plugin>
-		  <groupId>org.apache.aries.blueprint</groupId>
-		  <artifactId>blueprint-maven-plugin</artifactId>
-		  <version>1.10.0</version>
-		  <dependencies>
-		    <dependency>
-		      <groupId>org.apache.xbean</groupId>
-		      <artifactId>xbean-finder-shaded</artifactId>
-		      <version>4.16</version>
-		    </dependency>
-		  </dependencies>
-		  <configuration>
-		    <scanPaths>
-		      <scanPath>io.mishmash</scanPath>
-		    </scanPaths>
-		  </configuration>
-		  <executions>
-		    <execution>
-		      <goals>
-		        <goal>add-resource-dir</goal>
-		        <goal>blueprint-generate</goal>
-		      </goals>
-		    </execution>
-		  </executions>
-		</plugin>
-	  </plugins>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.13.0</version>
+          <configuration>
+            <source>17</source>
+            <target>17</target>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>3.3.0</version>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>3.6.3</version>
+          <executions>
+            <execution>
+            	<id>attach-javadocs</id>
+            	<goals>
+            	  <goal>jar</goal>
+            	</goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <version>3.3.1</version>
+          <configuration>
+            <excludeGeneratedSources>true</excludeGeneratedSources>
+            <encoding>UTF-8</encoding>
+            <consoleOutput>true</consoleOutput>
+            <failsOnError>true</failsOnError>
+            <linkXRef>false</linkXRef>
+          </configuration>
+          <executions>
+            <execution>
+              <id>validate</id>
+              <phase>validate</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+    		<plugin>
+	    	  <groupId>org.apache.felix</groupId>
+    		  <artifactId>maven-bundle-plugin</artifactId>
+	    	  <version>5.1.9</version>
+    		  <extensions>true</extensions>
+    		  <configuration>
+      			<instructions>
+  	    		  <Bundle-Name>${project.artifactId}</Bundle-Name>
+      			</instructions>
+    		  </configuration>
+    		</plugin>
+	    </plugins>
     </pluginManagement>
   </build>
-
-  <reporting>
-    <plugins>
-	  <plugin>
-	    <groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-checkstyle-plugin</artifactId>
-		<version>3.1.0</version>
-	  </plugin>
-	</plugins>
-  </reporting>
 </project>

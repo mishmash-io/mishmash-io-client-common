@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright 2020 MISHMASH I O OOD
+    Copyright 2024 Mishmash IO UK Ltd.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+      http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
--->
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.-->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -24,10 +23,39 @@
   
   <artifactId>mishmash-common-java</artifactId>
   <name>mishmash-common-java</name>
-  <packaging>bundle</packaging>
-  
+  <description>Common code shared between mishmash io Java client and server.</description>
   <url>https://mishmash.io</url>
   
+  <packaging>bundle</packaging>
+  
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Ivan Kountchev</name>
+      <email>info@mishmash.io</email>
+      <organization>mishmash io</organization>
+      <organizationUrl>https://mishmash.io</organizationUrl>
+    </developer>
+    <developer>
+      <name>Andrey Rusev</name>
+      <email>info@mishmash.io</email>
+      <organization>mishmash io</organization>
+      <organizationUrl>https://mishmash.io</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/mishmash-io/mishmash-io-client-common</connection>
+    <developerConnection>scm:git:https://github.com/mishmash-io/mishmash-io-client-common.git</developerConnection>
+    <url>https://github.com/mishmash-io/mishmash-io-client-common/tree/master</url>
+  </scm>
+
   <dependencies>
     <dependency>
       <groupId>io.mishmash.common</groupId>
@@ -38,10 +66,10 @@
   
   <build>
     <plugins>
-	  <plugin>
-	    <groupId>org.apache.felix</groupId>
-	    <artifactId>maven-bundle-plugin</artifactId>
-	  </plugin>
+	    <plugin>
+	      <groupId>org.apache.felix</groupId>
+	      <artifactId>maven-bundle-plugin</artifactId>
+	    </plugin>
     </plugins>
   </build>
 </project>
